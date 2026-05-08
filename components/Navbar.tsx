@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import VisitaTecnicaModal from "./VisitaTecnicaModal";
 
 const LINKS = [
@@ -44,14 +45,17 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <a href="/" className="flex items-center gap-2">
-              <span className="text-am-primary font-extrabold text-xl tracking-tight">
-                AM
-              </span>
+              <Image
+                src="/img/logo-am.jpg"
+                alt="Logo AM Soluciones Constructivas"
+                width={40}
+                height={40}
+                className="h-10 w-auto rounded"
+              />
               <span className="text-am-muted text-sm font-medium hidden sm:block">
                 Soluciones Constructivas
               </span>
             </a>
-
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-6">
               {LINKS.map((l) => (

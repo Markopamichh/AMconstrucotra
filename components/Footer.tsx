@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Footer() {
   return (
     <footer className="bg-am-primary text-white">
@@ -5,8 +7,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Col 1 */}
           <div>
-            <span className="text-2xl font-extrabold tracking-tight">AM</span>
-            <p className="text-sm text-blue-200 mt-3 leading-relaxed">
+            <Image
+              src="/img/logo-am.jpg"
+              alt="Logo AM Soluciones Constructivas"
+              width={56}
+              height={56}
+              className="rounded mb-3"
+            />
+            <p className="text-sm text-blue-200 leading-relaxed">
               Cerca tuyo en todo el proceso
             </p>
             <p className="text-xs text-blue-300 mt-2">
