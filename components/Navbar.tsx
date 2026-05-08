@@ -50,7 +50,7 @@ export default function Navbar() {
                 alt="Logo AM Soluciones Constructivas"
                 width={40}
                 height={40}
-                className="h-10 w-auto rounded"
+                className="h-10 w-auto mix-blend-multiply"
               />
               <span className="text-am-muted text-sm font-medium hidden sm:block">
                 Soluciones Constructivas

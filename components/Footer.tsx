@@ -12,7 +12,7 @@ export default function Footer() {
               alt="Logo AM Soluciones Constructivas"
               width={56}
               height={56}
-              className="rounded mb-3"
+              className="mb-3 brightness-0 invert"
             />
             <p className="text-sm text-blue-200 leading-relaxed">
               Cerca tuyo en todo el proceso
