@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import VisitaTecnicaModal from "./VisitaTecnicaModal";
 
@@ -16,12 +17,21 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  function resolveHref(href: string) {
+    if (href.startsWith("#")) {
+      return isHome ? href : `/${href}`;
+    }
+    return href;
+  }
 
   return (
     <>
@@ -47,7 +57,7 @@ export default function Navbar() {
               {LINKS.map((l) => (
                 <a
                   key={l.label}
-                  href={l.href}
+                  href={resolveHref(l.href)}
                   className="text-sm font-medium text-am-text hover:text-am-secondary transition-colors"
                 >
                   {l.label}
@@ -84,7 +94,7 @@ export default function Navbar() {
             {LINKS.map((l) => (
               <a
                 key={l.label}
-                href={l.href}
+                href={resolveHref(l.href)}
                 className="block text-sm font-medium text-am-text hover:text-am-secondary py-1"
                 onClick={() => setMenuOpen(false)}
               >
