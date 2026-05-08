@@ -10,7 +10,7 @@ import MetodoSection from "@/components/sections/MetodoSection";
 import FormaSection from "@/components/sections/FormaSection";
 import ContactoSection from "@/components/sections/ContactoSection";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 
 async function getProyectos() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return [];
