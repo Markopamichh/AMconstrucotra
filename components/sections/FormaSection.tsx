@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function FormaSection() {
   return (
     <section className="py-20 bg-white">
@@ -34,11 +36,12 @@ export default function FormaSection() {
 
           {/* Imagen */}
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100">
-            <img
-              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80"
+            <Image
+              src="/img/forma-de-trabajo.jpg"
               alt="Obra en construcción AM Soluciones"
-              className="w-full h-full object-cover"
-              loading="lazy"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
         </div>
