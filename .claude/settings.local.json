@@ -7,7 +7,10 @@
       "Bash(npx tsc *)",
       "Bash(npx -y pkg-version @supabase/auth-helpers-nextjs)",
       "Bash(npm run *)",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('main',''\\), d.get\\('exports',{}\\)\\)\")"
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('main',''\\), d.get\\('exports',{}\\)\\)\")",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(git status *)"
     ]
   }
 }

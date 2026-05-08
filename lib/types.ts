@@ -16,6 +16,15 @@ export interface Proyecto {
   created_at: string;
 }
 
+export interface GaleriaItem {
+  id: string;
+  titulo: string;
+  descripcion: string | null;
+  imagen: string;
+  orden: number;
+  created_at: string;
+}
+
 export interface Contacto {
   id: string;
   nombre: string;

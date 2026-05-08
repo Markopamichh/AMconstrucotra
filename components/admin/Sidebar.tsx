@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FolderOpen, MessageSquare, LogOut, Menu, X } from "lucide-react";
+import { FolderOpen, MessageSquare, LogOut, Menu, X, Images } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
 
 const NAV = [
   { label: "Proyectos", href: "/admin/proyectos", icon: FolderOpen },
+  { label: "Galería", href: "/admin/galeria", icon: Images },
   { label: "Contactos", href: "/admin/contactos", icon: MessageSquare },
 ];
 

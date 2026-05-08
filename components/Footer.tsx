@@ -25,6 +25,7 @@ export default function Footer() {
                 ["Servicios", "#servicios"],
                 ["Método AM", "#metodo"],
                 ["Proyectos", "#proyectos"],
+                ["Galería", "/galeria"],
                 ["Contacto", "#contacto"],
               ].map(([label, href]) => (
                 <li key={label}>

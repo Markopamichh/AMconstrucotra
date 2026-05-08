@@ -4,7 +4,9 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
+/* Forzar tema claro siempre, independiente del sistema operativo */
 :root {
+  color-scheme: light only;
   --am-primary: #1e3a6e;
   --am-secondary: #2e5cb8;
   --am-bg: #f5f7fa;
@@ -19,13 +21,23 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
 }
 
 body {
-  color: var(--am-text);
-  background: #ffffff;
+  color: #1a1a1a !important;
+  background: #ffffff !important;
   font-family: "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Neutralizar cualquier override del navegador en dark mode */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+  }
 }
 
 @layer utilities {
