@@ -34,6 +34,7 @@ export default function Footer() {
                 ["Método AM", "#metodo"],
                 ["Proyectos", "#proyectos"],
                 ["Galería", "/galeria"],
+                ["Sobre Nosotros", "/sobre-nosotros"],
                 ["Contacto", "#contacto"],
               ].map(([label, href]) => (
                 <li key={label}>

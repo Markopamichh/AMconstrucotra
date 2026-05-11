@@ -11,6 +11,7 @@ const LINKS = [
   { label: "Método AM", href: "#metodo" },
   { label: "Proyectos", href: "#proyectos" },
   { label: "Galería", href: "/galeria" },
+  { label: "Sobre Nosotros", href: "/sobre-nosotros" },
   { label: "Contacto", href: "#contacto" },
 ];
 
@@ -46,11 +47,11 @@ export default function Navbar() {
             {/* Logo */}
             <a href="/" className="flex items-center gap-2">
               <Image
-                src="/img/logo-am.jpg"
+                src="/img/Logo 1.png"
                 alt="Logo AM Soluciones Constructivas"
                 width={40}
                 height={40}
-                className="h-10 w-auto mix-blend-multiply"
+                className="h-10 w-auto"
               />
               <span className="text-am-muted text-sm font-medium hidden sm:block">
                 Soluciones Constructivas

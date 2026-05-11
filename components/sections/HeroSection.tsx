@@ -22,7 +22,8 @@ export default function HeroSection() {
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-24">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight text-balance">
-            Construimos de forma clara, ordenada y a tu ritmo
+            <span className="block">Constructora en Neuquén</span>
+            <span className="block">— Construimos de forma clara, ordenada y a tu ritmo</span>
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed text-balance">
             En AM Soluciones Constructivas entendemos que construir puede ser

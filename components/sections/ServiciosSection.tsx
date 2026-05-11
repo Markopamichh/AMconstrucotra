@@ -1,24 +1,28 @@
 "use client";
 import { useState } from "react";
 import { Building2, Hammer, Home } from "lucide-react";
+import Link from "next/link";
 import VisitaTecnicaModal from "@/components/VisitaTecnicaModal";
 
 const SERVICIOS = [
   {
     icon: Building2,
     titulo: "Estructuras",
+    slug: "estructuras",
     descripcion:
       "Hacemos la base de tu vivienda, lo más importante para que todo lo demás funcione bien. Fundaciones, muros, estructuras y cubiertas, ejecutadas con criterio técnico y planificadas desde el inicio.",
   },
   {
     icon: Hammer,
     titulo: "Servicios de obra y terminaciones",
+    slug: "terminaciones",
     descripcion:
       "Si ya empezaste o querés avanzar de a poco, trabajamos por etapas o en trabajos específicos. Terminaciones, instalaciones, revestimientos o sectores puntuales. Nos sumamos donde nos necesités.",
   },
   {
     icon: Home,
     titulo: "Obra completa – Método AM",
+    slug: "obra-completa",
     descripcion:
       "Si estás por construir tu casa, te acompañamos en todo el proceso con nuestro Método AM: 4 etapas ordenadas según tu presupuesto, sin improvisar ni rehacer.",
   },
@@ -64,6 +68,12 @@ export default function ServiciosSection() {
                   >
                     Pedí tu visita técnica →
                   </button>
+                  <Link
+                    href={`/servicios/${s.slug}`}
+                    className="mt-2 text-am-muted text-sm font-medium hover:text-am-primary hover:underline text-left transition-colors"
+                  >
+                    Ver más →
+                  </Link>
                 </div>
               );
             })}
