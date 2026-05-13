@@ -66,7 +66,7 @@ export default function SobreNosotrosPage() {
               </div>
               <div className="flex justify-center">
                 <Image
-                  src="/img/logosinfondo.jpeg"
+                  src="/img/Logo 1.png"
                   alt="AM Soluciones Constructivas — Constructora en Neuquén"
                   width={300}
                   height={300}

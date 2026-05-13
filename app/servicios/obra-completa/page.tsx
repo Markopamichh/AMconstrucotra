@@ -58,7 +58,7 @@ export default function ObraCompletaPage() {
               </p>
             </div>
 
-            <MetodoAMStepper />
+            <MetodoAMStepper variant="light" />
 
             <div>
               <h2 className="text-2xl font-bold text-am-primary mb-4">

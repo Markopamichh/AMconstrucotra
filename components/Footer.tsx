@@ -8,11 +8,12 @@ export default function Footer() {
           {/* Col 1 */}
           <div>
             <Image
-              src="/img/logo-am.jpg"
+              src="/img/Logo 1.png"
               alt="Logo AM Soluciones Constructivas"
               width={56}
               height={56}
-              className="mb-3 brightness-0 invert"
+              className="mb-3 h-14 w-auto mix-blend-screen"
+              style={{ filter: "invert(1) hue-rotate(180deg) saturate(2) brightness(1.2)" }}
             />
             <p className="text-sm text-blue-200 leading-relaxed">
               Cerca tuyo en todo el proceso

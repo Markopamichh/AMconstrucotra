@@ -6,6 +6,8 @@ import GaleriaSection from "@/components/GaleriaSection";
 import TestimoniosGrid from "@/components/TestimoniosGrid";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import HeroSection from "@/components/sections/HeroSection";
+import PasosStrip from "@/components/sections/PasosStrip";
+import ServiciosRapidos from "@/components/sections/ServiciosRapidos";
 import ServiciosSection from "@/components/sections/ServiciosSection";
 import MetodoSection from "@/components/sections/MetodoSection";
 import FormaSection from "@/components/sections/FormaSection";
@@ -48,6 +50,8 @@ export default async function Home() {
       <Navbar />
       <main id="inicio">
         <HeroSection />
+        <PasosStrip />
+        <ServiciosRapidos />
         <ServiciosSection />
         <MetodoSection />
         <FormaSection />

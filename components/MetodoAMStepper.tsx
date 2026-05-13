@@ -28,12 +28,33 @@ const ETAPAS = [
   },
 ];
 
+const STYLES = {
+  dark: {
+    circleBg: "bg-white/20",
+    circleBorder: "border-white",
+    numberText: "text-white",
+    connector: "bg-white/20",
+    title: "text-white",
+    description: "text-blue-200",
+  },
+  light: {
+    circleBg: "bg-am-primary/10",
+    circleBorder: "border-am-primary",
+    numberText: "text-am-primary",
+    connector: "bg-am-primary/20",
+    title: "text-am-primary",
+    description: "text-am-muted",
+  },
+};
+
 function StepItem({
   etapa,
   isLast,
+  styles,
 }: {
   etapa: (typeof ETAPAS)[0];
   isLast: boolean;
+  styles: (typeof STYLES)["dark"];
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -55,32 +76,52 @@ function StepItem({
 
   return (
     <div className="flex gap-6">
-      {/* Line + circle */}
+      {/* Línea + círculo */}
       <div className="flex flex-col items-center">
-        <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold text-sm">{etapa.numero}</span>
+        <div
+          className={`w-12 h-12 rounded-full ${styles.circleBg} border-2 ${styles.circleBorder} flex items-center justify-center flex-shrink-0`}
+        >
+          <span className={`${styles.numberText} font-bold text-sm`}>
+            {etapa.numero}
+          </span>
         </div>
-        {!isLast && <div className="w-px flex-1 bg-white/20 mt-2 min-h-[40px]" />}
+        {!isLast && (
+          <div className={`w-px flex-1 ${styles.connector} mt-2 min-h-[40px]`} />
+        )}
       </div>
 
-      {/* Content */}
+      {/* Contenido */}
       <div
         ref={ref}
         className="fade-in pb-10"
         style={{ transitionDelay: `${parseInt(etapa.numero) * 100}ms` }}
       >
-        <h3 className="text-xl font-bold text-white mb-2">{etapa.titulo}</h3>
-        <p className="text-blue-200 leading-relaxed">{etapa.descripcion}</p>
+        <h3 className={`text-xl font-bold ${styles.title} mb-2`}>
+          {etapa.titulo}
+        </h3>
+        <p className={`${styles.description} leading-relaxed`}>
+          {etapa.descripcion}
+        </p>
       </div>
     </div>
   );
 }
 
-export default function MetodoAMStepper() {
+export default function MetodoAMStepper({
+  variant = "dark",
+}: {
+  variant?: "dark" | "light";
+}) {
+  const styles = STYLES[variant];
   return (
     <div>
       {ETAPAS.map((etapa, i) => (
-        <StepItem key={etapa.numero} etapa={etapa} isLast={i === ETAPAS.length - 1} />
+        <StepItem
+          key={etapa.numero}
+          etapa={etapa}
+          isLast={i === ETAPAS.length - 1}
+          styles={styles}
+        />
       ))}
     </div>
   );
