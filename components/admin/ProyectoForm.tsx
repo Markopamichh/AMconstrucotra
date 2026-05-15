@@ -22,6 +22,7 @@ type ProyectoPartial = Partial<
     | "imagen_antes"
     | "imagen_despues"
     | "destacado"
+    | "publicado"
     | "orden"
   >
 >;
@@ -43,6 +44,7 @@ export default function ProyectoForm({ proyecto }: Props) {
     proyecto?.categoria ?? ""
   );
   const [destacado, setDestacado] = useState(proyecto?.destacado ?? false);
+  const [publicado, setPublicado] = useState(proyecto?.publicado ?? true);
   const [orden, setOrden] = useState(proyecto?.orden ?? 0);
   const [imagenes, setImagenes] = useState<string[]>(
     proyecto?.imagenes ?? []
@@ -58,6 +60,30 @@ export default function ProyectoForm({ proyecto }: Props) {
   );
   const [uploadingImages, setUploadingImages] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+
+  async function compressImage(file: File, maxPx = 1600, quality = 0.82): Promise<File> {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const ratio = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const w = Math.round(img.width * ratio);
+        const h = Math.round(img.height * ratio);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(
+          (blob) => resolve(blob ? new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }) : file),
+          "image/jpeg",
+          quality
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  }
 
   function handleTituloChange(val: string) {
     setTitulo(val);
@@ -81,8 +107,9 @@ export default function ProyectoForm({ proyecto }: Props) {
     setUploadingImages(true);
     const id = proyecto?.id ?? crypto.randomUUID();
     try {
+      const compressed = await Promise.all(Array.from(files).map((f) => compressImage(f)));
       const uploaded = await Promise.all(
-        Array.from(files).map((f) => uploadFile(f, id))
+        compressed.map((f) => uploadFile(f, id))
       );
       setImagenes((prev) => {
         const next = [...prev, ...uploaded];
@@ -102,7 +129,8 @@ export default function ProyectoForm({ proyecto }: Props) {
   ) {
     const id = proyecto?.id ?? crypto.randomUUID();
     try {
-      const url = await uploadFile(file, id);
+      const compressed = await compressImage(file);
+      const url = await uploadFile(compressed, id);
       setter(url);
     } catch (e: unknown) {
       setServerError(e instanceof Error ? e.message : "Error al subir imagen");
@@ -137,6 +165,7 @@ export default function ProyectoForm({ proyecto }: Props) {
       imagen_antes: imagenAntes || null,
       imagen_despues: imagenDespues || null,
       destacado,
+      publicado,
       orden,
     };
 
@@ -248,8 +277,8 @@ export default function ProyectoForm({ proyecto }: Props) {
         </select>
       </div>
 
-      {/* Destacado + Orden */}
-      <div className="flex items-center gap-6">
+      {/* Destacado + Publicado + Orden */}
+      <div className="flex items-center gap-6 flex-wrap">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
@@ -258,6 +287,15 @@ export default function ProyectoForm({ proyecto }: Props) {
             className="w-4 h-4 accent-am-primary"
           />
           <span className="text-sm font-medium text-am-text">Destacado</span>
+        </label>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={publicado}
+            onChange={(e) => setPublicado(e.target.checked)}
+            className="w-4 h-4 accent-am-primary"
+          />
+          <span className="text-sm font-medium text-am-text">Publicado</span>
         </label>
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-am-text">Orden:</label>

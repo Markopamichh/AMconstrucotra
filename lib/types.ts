@@ -12,6 +12,7 @@ export interface Proyecto {
   imagen_antes: string | null;
   imagen_despues: string | null;
   destacado: boolean;
+  publicado: boolean;
   orden: number;
   created_at: string;
 }

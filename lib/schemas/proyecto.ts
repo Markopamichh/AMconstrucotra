@@ -11,6 +11,7 @@ export const proyectoSchema = z.object({
   imagen_antes: z.string().optional().nullable(),
   imagen_despues: z.string().optional().nullable(),
   destacado: z.boolean().default(false),
+  publicado: z.boolean().default(true),
   orden: z.number().int().default(0),
 });
 
