@@ -55,12 +55,10 @@ export default function HeroSection() {
           <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#F5F7FA] pointer-events-none z-10 lg:hidden" />
           {/* Fade izquierdo en desktop — hacia el panel de texto */}
           <div className="absolute inset-y-0 left-0 w-40 xl:w-56 bg-gradient-to-r from-[#F5F7FA] to-transparent pointer-events-none z-10 hidden lg:block" />
-          {/* Fade derecho en desktop — costado opuesto */}
-          <div className="absolute inset-y-0 right-0 w-24 xl:w-36 bg-gradient-to-l from-[#F5F7FA] to-transparent pointer-events-none z-10 hidden lg:block" />
           {/* Badge ubicación */}
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex items-center gap-1.5 bg-white/85 backdrop-blur-sm text-am-primary text-xs tracking-widest uppercase font-semibold px-3 py-1.5 rounded-full shadow-sm">
             <MapPin className="w-3 h-3 text-am-secondary shrink-0" />
-            Constructora en Neuquén
+            Alto Valle — hasta 50 km
           </div>
         </div>
 
