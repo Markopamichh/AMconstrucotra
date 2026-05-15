@@ -4,6 +4,28 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import CTAFinalProyecto from "@/components/CTAFinalProyecto";
+import StructuredData from "@/components/seo/StructuredData";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://am-constructora.vercel.app";
+
+const serviceLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Construcción de plateas y fundaciones en Neuquén",
+  description: "Plateas de hormigón, fundaciones, muros y cubiertas en Neuquén. Ejecutamos la base de tu vivienda con criterio técnico.",
+  areaServed: { "@type": "City", name: "Neuquén", addressCountry: "AR" },
+  provider: { "@type": "GeneralContractor", name: "AM Soluciones Constructivas", url: BASE_URL },
+  url: `${BASE_URL}/servicios/estructuras`,
+};
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Inicio", item: BASE_URL },
+    { "@type": "ListItem", position: 2, name: "Estructuras", item: `${BASE_URL}/servicios/estructuras` },
+  ],
+};
 
 export const metadata: Metadata = {
   title: "Construcción de Plateas y Fundaciones en Neuquén | AM Soluciones",
@@ -21,6 +43,8 @@ export const metadata: Metadata = {
 export default function EstructurasPage() {
   return (
     <>
+      <StructuredData data={serviceLd} />
+      <StructuredData data={breadcrumbLd} />
       <Navbar />
       <main className="pt-20 min-h-screen bg-white">
         <section className="bg-am-bg py-16">

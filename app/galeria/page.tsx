@@ -8,9 +8,16 @@ import GaleriaSection from "@/components/GaleriaSection";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Galería | AM Soluciones Constructivas",
+  title: "Galería de Obras | AM Soluciones Constructivas — Neuquén",
   description:
-    "Galería de trabajos y obras realizadas por AM Soluciones Constructivas en Neuquén.",
+    "Mirá obras reales en Neuquén: plateas, revestimientos, steel frame y obras completas ejecutadas por AM Soluciones Constructivas.",
+  openGraph: {
+    title: "Galería de Obras | AM Soluciones Constructivas",
+    description:
+      "Mirá obras reales en Neuquén: plateas, revestimientos, steel frame y obras completas ejecutadas por AM Soluciones Constructivas.",
+    locale: "es_AR",
+    type: "website",
+  },
 };
 
 export default async function GaleriaPage() {

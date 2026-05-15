@@ -5,6 +5,28 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import CTAFinalProyecto from "@/components/CTAFinalProyecto";
 import MetodoAMStepper from "@/components/MetodoAMStepper";
+import StructuredData from "@/components/seo/StructuredData";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://am-constructora.vercel.app";
+
+const serviceLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Obra completa en Neuquén — Método AM",
+  description: "Construí tu casa en Neuquén con el Método AM: 4 etapas ordenadas, sin improvisar ni rehacer. Sistema mixto, steel frame y acompañamiento completo.",
+  areaServed: { "@type": "City", name: "Neuquén", addressCountry: "AR" },
+  provider: { "@type": "GeneralContractor", name: "AM Soluciones Constructivas", url: BASE_URL },
+  url: `${BASE_URL}/servicios/obra-completa`,
+};
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Inicio", item: BASE_URL },
+    { "@type": "ListItem", position: 2, name: "Obra Completa", item: `${BASE_URL}/servicios/obra-completa` },
+  ],
+};
 
 export const metadata: Metadata = {
   title: "Obra Completa en Neuquén — Método AM | AM Soluciones Constructivas",
@@ -22,6 +44,8 @@ export const metadata: Metadata = {
 export default function ObraCompletaPage() {
   return (
     <>
+      <StructuredData data={serviceLd} />
+      <StructuredData data={breadcrumbLd} />
       <Navbar />
       <main className="pt-20 min-h-screen bg-white">
         <section className="bg-am-bg py-16">

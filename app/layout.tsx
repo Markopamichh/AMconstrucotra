@@ -24,26 +24,68 @@ const jsonLd = {
   geo: {
     "@type": "GeoCoordinates",
     latitude: -38.9516,
-    longitude: -68.9587,
+    longitude: -68.0591,
   },
   areaServed: { "@type": "City", name: "Neuquén" },
   sameAs: ["https://instagram.com/am_soluciones.nqn"],
   image: `${BASE_URL}/img/logosinfondo.jpeg`,
   priceRange: "$$",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5",
+    reviewCount: "6",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  review: [
+    {
+      "@type": "Review",
+      author: { "@type": "Person", name: "Nashira Buganém" },
+      reviewRating: { "@type": "Rating", ratingValue: "5" },
+      reviewBody:
+        "Excelente asesoramiento personalizado. Cumplieron en tiempo y forma con los trabajos pedidos.",
+    },
+    {
+      "@type": "Review",
+      author: { "@type": "Person", name: "Milcell Neuquén" },
+      reviewRating: { "@type": "Rating", ratingValue: "5" },
+      reviewBody:
+        "Terminaron antes de tiempo, el trabajo quedó mejor de lo que esperaba. Muy buena comunicación. Muy recomendables.",
+    },
+    {
+      "@type": "Review",
+      author: { "@type": "Person", name: "Andrés Cerda" },
+      reviewRating: { "@type": "Rating", ratingValue: "5" },
+      reviewBody: "Se cumplió en tiempo y forma. 55 metros de piso. La verdad, muy conformes.",
+    },
+    {
+      "@type": "Review",
+      author: { "@type": "Person", name: "Natalia Ramos" },
+      reviewRating: { "@type": "Rating", ratingValue: "5" },
+      reviewBody:
+        "Realizaron el revestimiento de mi quincho, pisos, pintura y sanitarios. Quedó hermoso todo.",
+    },
+    {
+      "@type": "Review",
+      author: { "@type": "Person", name: "Ana Bravo" },
+      reviewRating: { "@type": "Rating", ratingValue: "5" },
+      reviewBody:
+        "Responsabilidad, calidad de materiales y accesibles en presupuestos. La platea quedó excelente. Son de confianza.",
+    },
+    {
+      "@type": "Review",
+      author: { "@type": "Person", name: "Valén Pino" },
+      reviewRating: { "@type": "Rating", ratingValue: "5" },
+      reviewBody:
+        "Súper responsables, de confianza. Cumplen con su palabra. No duden en contratarlos.",
+    },
+  ],
 };
 
 export const metadata: Metadata = {
   title: "Constructora en Neuquén | Viviendas y Obras por Etapas - AM Soluciones",
   description:
     "Construcción de viviendas en Neuquén. Sistema mixto tradicional + seco. Acompañamiento en todo el proceso. Visita técnica gratuita.",
-  keywords: [
-    "constructora Neuquén",
-    "construcción por etapas Neuquén",
-    "sistema mixto construcción",
-    "viviendas Neuquén",
-    "plateas Neuquén",
-    "steel frame Neuquén",
-  ],
   openGraph: {
     title: "Constructora en Neuquén | AM Soluciones Constructivas",
     description:
@@ -61,22 +103,21 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Constructora en Neuquén | AM Soluciones Constructivas",
+    description:
+      "Construimos tu vivienda en Neuquén de forma clara, ordenada y a tu ritmo.",
+    images: [`${BASE_URL}/img/logosinfondo.jpeg`],
+  },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" style={{ colorScheme: "light" }}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet"

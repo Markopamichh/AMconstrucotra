@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import CTAFinalProyecto from "@/components/CTAFinalProyecto";
 import GaleriaLightbox from "@/components/GaleriaLightbox";
+import StructuredData from "@/components/seo/StructuredData";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -22,6 +23,9 @@ export async function generateStaticParams() {
   return data?.map(({ slug }: { slug: string }) => ({ slug })) ?? [];
 }
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://am-constructora.vercel.app";
+
 export async function generateMetadata({
   params,
 }: {
@@ -31,18 +35,37 @@ export async function generateMetadata({
   const supabase = createAdminClient();
   const { data } = await supabase
     .from("proyectos")
-    .select("titulo, descripcion_corta, imagen_portada")
+    .select("titulo, descripcion_corta, imagen_portada, categoria")
     .eq("slug", params.slug)
     .single();
 
   if (!data) return {};
 
+  const categoriaLabel = data.categoria ? formatCategoria(data.categoria) : "Proyecto";
+  const description =
+    data.descripcion_corta ??
+    `${categoriaLabel} en Neuquén ejecutado por AM Soluciones Constructivas. Mirá el resultado.`;
+  const title = `${data.titulo} — ${categoriaLabel} en Neuquén | AM Soluciones`;
+  const image = data.imagen_portada ?? `${BASE_URL}/img/logosinfondo.jpeg`;
+
   return {
-    title: `${data.titulo} | AM Soluciones Constructivas`,
-    description: data.descripcion_corta ?? undefined,
-    openGraph: data.imagen_portada
-      ? { images: [data.imagen_portada] }
-      : undefined,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      locale: "es_AR",
+      type: "website",
+      url: `${BASE_URL}/proyectos/${params.slug}`,
+      siteName: "AM Soluciones Constructivas",
+      images: [{ url: image, alt: data.titulo }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
   };
 }
 
@@ -64,8 +87,34 @@ export default async function ProyectoDetallePage({
     ? CATEGORIA_COLORS[proyecto.categoria] ?? "bg-gray-100 text-gray-800"
     : "";
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "Proyectos", item: `${BASE_URL}/#proyectos` },
+      { "@type": "ListItem", position: 3, name: proyecto.titulo, item: `${BASE_URL}/proyectos/${proyecto.slug ?? params.slug}` },
+    ],
+  };
+
+  const projectLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: proyecto.titulo,
+    description: proyecto.descripcion_corta ?? proyecto.descripcion ?? undefined,
+    image: proyecto.imagen_portada ?? undefined,
+    provider: {
+      "@type": "GeneralContractor",
+      name: "AM Soluciones Constructivas",
+      url: BASE_URL,
+    },
+    locationCreated: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: "Neuquén", addressCountry: "AR" } },
+  };
+
   return (
     <>
+      <StructuredData data={breadcrumbLd} />
+      <StructuredData data={projectLd} />
       <Navbar />
       <main className="pt-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
