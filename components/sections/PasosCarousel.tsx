@@ -5,11 +5,11 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SLIDES = [
-  { src: "/img/pasos/img carousele1.png", alt: "01. Escuchamos — Entendemos tu idea y tus necesidades", fit: "object-cover" },
-  { src: "/img/pasos/img carousele2.png", alt: "02. Ordenamos la idea — Transformamos la información en una propuesta clara y posible", fit: "object-cover" },
-  { src: "/img/pasos/img carousele 3.png", alt: "03. Construimos — Ejecutamos el proyecto con calidad y compromiso", fit: "object-cover" },
-  { src: "/img/pasos/img carousele 4.png", alt: "04. Entregamos — Aseguramos la calidad y el cumplimiento del proyecto", fit: "object-cover" },
-  { src: "/img/pasos/img carousele 5.png", alt: "05. Mantenemos — Brindamos soporte y servicio postventa", fit: "object-cover" },
+  { src: "/img/pasos/img-carousele-1.png", alt: "01. Escuchamos — Entendemos tu idea y tus necesidades", fit: "object-cover" },
+  { src: "/img/pasos/img-carousele-2.png", alt: "02. Ordenamos la idea — Transformamos la información en una propuesta clara y posible", fit: "object-cover" },
+  { src: "/img/pasos/img-carousele-3.png", alt: "03. Construimos — Ejecutamos el proyecto con calidad y compromiso", fit: "object-cover" },
+  { src: "/img/pasos/img-carousele-4.png", alt: "04. Entregamos — Aseguramos la calidad y el cumplimiento del proyecto", fit: "object-cover" },
+  { src: "/img/pasos/img-carousele-5.png", alt: "05. Mantenemos — Brindamos soporte y servicio postventa", fit: "object-cover" },
 ];
 
 function getOffset(i: number, current: number, n: number) {
