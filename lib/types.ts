@@ -32,6 +32,7 @@ export interface Contacto {
   localidad: string;
   descripcion_proyecto: string;
   disponibilidad: string;
+  origen: "whatsapp_jeni" | "whatsapp_silvia" | null;
   leido: boolean;
   created_at: string;
 }

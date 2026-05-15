@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { generarLinkWhatsApp, type VisitaFormData } from "@/lib/utils/whatsapp";
 
 const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
@@ -20,11 +20,18 @@ const emptyForm = (): VisitaFormData => ({
   horarios: [],
 });
 
+type Origen = "whatsapp_jeni" | "whatsapp_silvia";
+
 export default function VisitaTecnicaModal({ open, onClose }: Props) {
   const [form, setForm] = useState<VisitaFormData>(emptyForm());
   const [errors, setErrors] = useState<Partial<Record<keyof VisitaFormData, string>>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState<Origen | null>(null);
+  const [saveError, setSaveError] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  const jeni = process.env.NEXT_PUBLIC_WHATSAPP_JENI ?? "5492994226380";
+  const silvia = process.env.NEXT_PUBLIC_WHATSAPP_SILVIA ?? "5492995230772";
 
   useEffect(() => {
     if (open) {
@@ -34,33 +41,25 @@ export default function VisitaTecnicaModal({ open, onClose }: Props) {
       setForm(emptyForm());
       setErrors({});
       setSubmitted(false);
+      setSaveError(false);
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
   if (!open) return null;
 
-  const toggleCheck = (
-    field: "dias" | "horarios",
-    value: string
-  ) => {
+  const toggleCheck = (field: "dias" | "horarios", value: string) => {
     setForm((prev) => {
       const arr = prev[field];
       return {
         ...prev,
-        [field]: arr.includes(value)
-          ? arr.filter((v) => v !== value)
-          : [...arr, value],
+        [field]: arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value],
       };
     });
   };
@@ -82,27 +81,56 @@ export default function VisitaTecnicaModal({ open, onClose }: Props) {
     if (validate()) setSubmitted(true);
   };
 
-  const jeni = process.env.NEXT_PUBLIC_WHATSAPP_JENI ?? "5492994226380";
-  const silvia = process.env.NEXT_PUBLIC_WHATSAPP_SILVIA ?? "5492995230772";
+  const handleEnviar = async (origen: Origen) => {
+    const numero = origen === "whatsapp_jeni" ? jeni : silvia;
+    const waLink = generarLinkWhatsApp(numero, form);
+
+    setSending(origen);
+    setSaveError(false);
+
+    try {
+      await fetch("/api/contactos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: form.nombre,
+          telefono: form.telefono,
+          localidad: form.localidad,
+          descripcion: form.descripcion,
+          disponibilidad: [...form.dias, ...form.horarios],
+          origen,
+        }),
+      });
+    } catch {
+      // El registro falló pero abrimos WhatsApp igual — el lead via WA es prioritario
+      setSaveError(true);
+    } finally {
+      setSending(null);
+    }
+
+    window.open(waLink, "_blank", "noopener,noreferrer");
+  };
+
+  const WaIcon = () => (
+    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.126 1.534 5.86L0 24l6.34-1.508A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.775-.523-5.35-1.437L2 22l1.47-4.535A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+    </svg>
+  );
 
   return (
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={(e) => {
-        if (e.target === overlayRef.current) onClose();
-      }}
+      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
       <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 px-6 pt-6 pb-4 flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-am-primary">
-              Pedí tu visita técnica
-            </h2>
+            <h2 className="text-2xl font-bold text-am-primary">Pedí tu visita técnica</h2>
             <p className="text-am-muted text-sm mt-1">
-              Completá los datos y te contactamos para coordinar una visita
-              gratuita al terreno.
+              Completá los datos y te contactamos para coordinar una visita gratuita al terreno.
             </p>
           </div>
           <button
@@ -116,137 +144,88 @@ export default function VisitaTecnicaModal({ open, onClose }: Props) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-          {/* Nombre */}
           <div>
-            <label className="block text-sm font-medium text-am-text mb-1">
-              Nombre y apellido
-            </label>
+            <label className="block text-sm font-medium text-am-text mb-1">Nombre y apellido</label>
             <input
               type="text"
               value={form.nombre}
               onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary ${
-                errors.nombre ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary ${errors.nombre ? "border-red-500" : "border-gray-300"}`}
               placeholder="Ej: Juan García"
             />
-            {errors.nombre && (
-              <p className="text-red-500 text-xs mt-1">{errors.nombre}</p>
-            )}
+            {errors.nombre && <p className="text-red-500 text-xs mt-1">{errors.nombre}</p>}
           </div>
 
-          {/* Teléfono */}
           <div>
-            <label className="block text-sm font-medium text-am-text mb-1">
-              Número de contacto
-            </label>
+            <label className="block text-sm font-medium text-am-text mb-1">Número de contacto</label>
             <input
               type="tel"
               value={form.telefono}
               onChange={(e) => setForm({ ...form, telefono: e.target.value })}
-              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary ${
-                errors.telefono ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary ${errors.telefono ? "border-red-500" : "border-gray-300"}`}
               placeholder="Ej: +54 9 299 123-4567"
             />
-            {errors.telefono && (
-              <p className="text-red-500 text-xs mt-1">{errors.telefono}</p>
-            )}
+            {errors.telefono && <p className="text-red-500 text-xs mt-1">{errors.telefono}</p>}
           </div>
 
-          {/* Localidad */}
           <div>
-            <label className="block text-sm font-medium text-am-text mb-1">
-              Localidad de obra
-            </label>
+            <label className="block text-sm font-medium text-am-text mb-1">Localidad de obra</label>
             <input
               type="text"
               value={form.localidad}
               onChange={(e) => setForm({ ...form, localidad: e.target.value })}
-              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary ${
-                errors.localidad ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary ${errors.localidad ? "border-red-500" : "border-gray-300"}`}
               placeholder="Ej: Neuquén Capital, Plottier"
             />
-            {errors.localidad && (
-              <p className="text-red-500 text-xs mt-1">{errors.localidad}</p>
-            )}
+            {errors.localidad && <p className="text-red-500 text-xs mt-1">{errors.localidad}</p>}
           </div>
 
-          {/* Descripción */}
           <div>
-            <label className="block text-sm font-medium text-am-text mb-1">
-              Descripción del proyecto a cotizar
-            </label>
+            <label className="block text-sm font-medium text-am-text mb-1">Descripción del proyecto</label>
             <textarea
               rows={3}
               value={form.descripcion}
-              onChange={(e) =>
-                setForm({ ...form, descripcion: e.target.value })
-              }
-              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary resize-none ${
-                errors.descripcion ? "border-red-500" : "border-gray-300"
-              }`}
-              placeholder="Ej: Quiero construir una casa de 80m², 3 ambientes, en un terreno de 300m² en Neuquén Capital."
+              onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+              className={`w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-am-secondary resize-none ${errors.descripcion ? "border-red-500" : "border-gray-300"}`}
+              placeholder="Ej: Quiero construir una casa de 80m², 3 ambientes, en un terreno de 300m²."
             />
-            {errors.descripcion && (
-              <p className="text-red-500 text-xs mt-1">{errors.descripcion}</p>
-            )}
+            {errors.descripcion && <p className="text-red-500 text-xs mt-1">{errors.descripcion}</p>}
           </div>
 
-          {/* Días */}
           <div>
-            <label className="block text-sm font-medium text-am-text mb-2">
-              Días disponibles
-            </label>
+            <label className="block text-sm font-medium text-am-text mb-2">Días disponibles</label>
             <div className="flex flex-wrap gap-2">
               {DIAS.map((dia) => (
                 <button
                   key={dia}
                   type="button"
                   onClick={() => toggleCheck("dias", dia)}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
-                    form.dias.includes(dia)
-                      ? "bg-am-primary text-white border-am-primary"
-                      : "bg-white text-am-text border-gray-300 hover:border-am-secondary"
-                  }`}
+                  className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${form.dias.includes(dia) ? "bg-am-primary text-white border-am-primary" : "bg-white text-am-text border-gray-300 hover:border-am-secondary"}`}
                 >
                   {dia}
                 </button>
               ))}
             </div>
-            {errors.dias && (
-              <p className="text-red-500 text-xs mt-1">{errors.dias}</p>
-            )}
+            {errors.dias && <p className="text-red-500 text-xs mt-1">{errors.dias}</p>}
           </div>
 
-          {/* Horarios */}
           <div>
-            <label className="block text-sm font-medium text-am-text mb-2">
-              Horarios disponibles
-            </label>
+            <label className="block text-sm font-medium text-am-text mb-2">Horarios disponibles</label>
             <div className="flex flex-wrap gap-2">
               {HORARIOS.map((h) => (
                 <button
                   key={h}
                   type="button"
                   onClick={() => toggleCheck("horarios", h)}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
-                    form.horarios.includes(h)
-                      ? "bg-am-primary text-white border-am-primary"
-                      : "bg-white text-am-text border-gray-300 hover:border-am-secondary"
-                  }`}
+                  className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${form.horarios.includes(h) ? "bg-am-primary text-white border-am-primary" : "bg-white text-am-text border-gray-300 hover:border-am-secondary"}`}
                 >
                   {h}
                 </button>
               ))}
             </div>
-            {errors.horarios && (
-              <p className="text-red-500 text-xs mt-1">{errors.horarios}</p>
-            )}
+            {errors.horarios && <p className="text-red-500 text-xs mt-1">{errors.horarios}</p>}
           </div>
 
-          {/* Submit */}
           {!submitted ? (
             <button
               type="submit"
@@ -259,30 +238,41 @@ export default function VisitaTecnicaModal({ open, onClose }: Props) {
               <p className="text-sm text-am-muted text-center">
                 ¡Listo! Ahora elegí a quién enviarle el mensaje:
               </p>
-              <a
-                href={generarLinkWhatsApp(jeni, form)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full bg-am-whatsapp text-white font-semibold rounded-lg py-3 hover:brightness-90 transition-all"
+
+              {saveError && (
+                <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 text-center">
+                  Hubo un problema al guardar tu consulta, pero podés escribirnos igual por WhatsApp.
+                </p>
+              )}
+
+              <button
+                type="button"
+                onClick={() => handleEnviar("whatsapp_jeni")}
+                disabled={sending !== null}
+                className="flex items-center justify-center gap-2 w-full bg-am-whatsapp text-white font-semibold rounded-lg py-3 hover:brightness-90 transition-all disabled:opacity-70"
               >
-                <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.126 1.534 5.86L0 24l6.34-1.508A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.775-.523-5.35-1.437L2 22l1.47-4.535A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-                </svg>
+                {sending === "whatsapp_jeni" ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <WaIcon />
+                )}
                 Enviar a Jeni 💬
-              </a>
-              <a
-                href={generarLinkWhatsApp(silvia, form)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full bg-am-whatsapp text-white font-semibold rounded-lg py-3 hover:brightness-90 transition-all"
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleEnviar("whatsapp_silvia")}
+                disabled={sending !== null}
+                className="flex items-center justify-center gap-2 w-full bg-am-whatsapp text-white font-semibold rounded-lg py-3 hover:brightness-90 transition-all disabled:opacity-70"
               >
-                <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.126 1.534 5.86L0 24l6.34-1.508A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.946 0-3.775-.523-5.35-1.437L2 22l1.47-4.535A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
-                </svg>
+                {sending === "whatsapp_silvia" ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <WaIcon />
+                )}
                 Enviar a Silvia 💬
-              </a>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setSubmitted(false)}
