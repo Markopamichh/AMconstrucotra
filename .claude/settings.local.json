@@ -10,7 +10,15 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('main',''\\), d.get\\('exports',{}\\)\\)\")",
       "mcp__claude_ai_Supabase__apply_migration",
       "mcp__claude_ai_Vercel__deploy_to_vercel",
-      "Bash(git status *)"
+      "Bash(git status *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "WebFetch(domain:unsplash.com)",
+      "PowerShell(Copy-Item *)",
+      "Bash(cp \"D:\\\\Administrator\\\\Escritorio\\\\Proyectos marko\\\\Proyectos\\\\Conatructora archivos img\\\\img pasosstrip.jpeg\" \"D:\\\\Administrator\\\\Escritorio\\\\Proyectos marko\\\\Proyectos\\\\Constructora AM nqn\\\\public\\\\img\\\\pasos\\\\paso-01.jpeg\")",
+      "Bash(cp \"D:\\\\Administrator\\\\Escritorio\\\\Proyectos marko\\\\Proyectos\\\\Conatructora archivos img\\\\img pasos strip 2.jpeg\" \"D:\\\\Administrator\\\\Escritorio\\\\Proyectos marko\\\\Proyectos\\\\Constructora AM nqn\\\\public\\\\img\\\\pasos\\\\paso-02.jpeg\")",
+      "mcp__claude_ai_Supabase__list_projects"
     ]
   }
 }

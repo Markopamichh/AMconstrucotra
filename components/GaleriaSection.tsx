@@ -42,7 +42,17 @@ export default function GaleriaSection({ items }: Props) {
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <p className="text-4xl mb-4">🏗️</p>
+        <p className="text-am-primary font-bold text-lg">Próximamente</p>
+        <p className="text-am-muted text-sm mt-2 max-w-xs">
+          Estamos cargando nuestros trabajos. Volvé pronto.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>

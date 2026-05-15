@@ -15,7 +15,7 @@ export default function ContactoSection() {
               ¿Hablamos?
             </h2>
             <p className="text-am-muted mt-3">
-              Estamos en Neuquén y trabajamos en toda la región.
+              Trabajamos en todo el Alto Valle, hasta 50 km a la redonda.
             </p>
           </div>
 
@@ -81,7 +81,7 @@ export default function ContactoSection() {
             {/* Mapa */}
             <div className="rounded-2xl overflow-hidden h-72 lg:h-auto min-h-[280px] border border-gray-200">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3074.1234567890!2d-68.9587!3d-38.9516!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x960a336a2c4f0d3d%3A0x0!2sCórdoba+478%2C+Neuquén%2C+Argentina!5e0!3m2!1ses!2sar!4v1699999999999!5m2!1ses!2sar"
+                src="https://maps.google.com/maps?q=C%C3%B3rdoba+478%2C+Neuqu%C3%A9n%2C+Argentina&output=embed&hl=es"
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: "280px" }}

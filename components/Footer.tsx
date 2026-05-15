@@ -19,7 +19,7 @@ export default function Footer() {
               Cerca tuyo en todo el proceso
             </p>
             <p className="text-xs text-blue-300 mt-2">
-              Soluciones Constructivas — Neuquén, Argentina
+              Soluciones Constructivas — Alto Valle, Neuquén
             </p>
           </div>
 
@@ -96,8 +96,23 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-blue-800 mt-10 pt-6 text-center text-xs text-blue-300">
-          © 2026 AM Soluciones Constructivas. Neuquén, Argentina.
+        <div className="border-t border-blue-800 mt-10 pt-6 text-center text-xs text-blue-300 space-y-1">
+          <div>
+            © {new Date().getFullYear()} AM Soluciones Constructivas. Alto Valle, Neuquén. · Designed &amp; developed by{" "}
+            <a
+              href="https://portfoliomarko.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-blue-100 hover:text-white transition-colors underline-offset-4 hover:underline"
+            >
+              Marko Pamich
+            </a>
+          </div>
+          <div>
+            <a href="/politica-de-privacidad" className="hover:text-white transition-colors underline-offset-4 hover:underline">
+              Política de privacidad
+            </a>
+          </div>
         </div>
       </div>
     </footer>
