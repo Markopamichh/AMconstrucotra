@@ -1,7 +1,9 @@
 "use server";
 import { createClient } from "@supabase/supabase-js";
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { galeriaSchema, type GaleriaInput } from "@/lib/schemas/galeria";
+
+export type { GaleriaInput };
 
 function getServiceClient() {
   return createClient(
@@ -10,17 +12,8 @@ function getServiceClient() {
   );
 }
 
-const GaleriaSchema = z.object({
-  titulo: z.string().min(1, "El título es requerido"),
-  descripcion: z.string().optional().nullable(),
-  imagen: z.string().min(1, "La imagen es requerida"),
-  orden: z.number().int().default(0),
-});
-
-export type GaleriaInput = z.infer<typeof GaleriaSchema>;
-
 export async function createGaleriaItem(data: GaleriaInput) {
-  const parsed = GaleriaSchema.safeParse(data);
+  const parsed = galeriaSchema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
   const supabase = getServiceClient();
   const { error } = await supabase.from("galeria").insert(parsed.data);
@@ -32,7 +25,7 @@ export async function createGaleriaItem(data: GaleriaInput) {
 }
 
 export async function updateGaleriaItem(id: string, data: GaleriaInput) {
-  const parsed = GaleriaSchema.safeParse(data);
+  const parsed = galeriaSchema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
   const supabase = getServiceClient();
   const { error } = await supabase.from("galeria").update(parsed.data).eq("id", id);

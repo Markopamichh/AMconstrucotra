@@ -1,7 +1,9 @@
 "use server";
 import { createClient } from "@supabase/supabase-js";
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { proyectoSchema, type ProyectoInput } from "@/lib/schemas/proyecto";
+
+export type { ProyectoInput };
 
 function getServiceClient() {
   return createClient(
@@ -10,24 +12,8 @@ function getServiceClient() {
   );
 }
 
-const ProyectoSchema = z.object({
-  titulo: z.string().min(1, "El título es requerido"),
-  slug: z.string().min(1, "El slug es requerido"),
-  descripcion_corta: z.string().max(150).optional().nullable(),
-  descripcion: z.string().optional().nullable(),
-  categoria: z.enum(["estructuras", "terminaciones", "obra_completa"]),
-  imagenes: z.array(z.string()).default([]),
-  imagen_portada: z.string().optional().nullable(),
-  imagen_antes: z.string().optional().nullable(),
-  imagen_despues: z.string().optional().nullable(),
-  destacado: z.boolean().default(false),
-  orden: z.number().int().default(0),
-});
-
-export type ProyectoInput = z.infer<typeof ProyectoSchema>;
-
 export async function createProyecto(data: ProyectoInput) {
-  const parsed = ProyectoSchema.safeParse(data);
+  const parsed = proyectoSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors };
   }
@@ -40,7 +26,7 @@ export async function createProyecto(data: ProyectoInput) {
 }
 
 export async function updateProyecto(id: string, data: ProyectoInput) {
-  const parsed = ProyectoSchema.safeParse(data);
+  const parsed = proyectoSchema.safeParse(data);
   if (!parsed.success) {
     return { error: parsed.error.flatten().fieldErrors };
   }

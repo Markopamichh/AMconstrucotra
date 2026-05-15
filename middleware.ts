@@ -30,8 +30,26 @@ export async function middleware(req: NextRequest) {
   const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
   const isLoginPage = req.nextUrl.pathname === "/admin/login";
 
-  if (isAdminRoute && !isLoginPage && !session) {
-    return NextResponse.redirect(new URL("/admin/login", req.url));
+  if (isAdminRoute && !isLoginPage) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/admin/login", req.url));
+    }
+
+    // Whitelist de emails autorizados para el admin
+    const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (
+      adminEmails.length > 0 &&
+      !adminEmails.includes(session.user.email?.toLowerCase() ?? "")
+    ) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(
+        new URL("/admin/login?error=unauthorized", req.url)
+      );
+    }
   }
 
   if (isLoginPage && session) {
